@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>matching colors</title>
+    <link rel="stylesheet" href="colors.css">
+</head>
+
+<body>
+    <main>
+        <input id="color-pick" type="range" min="0" max="300" step="1">
+        <input id="saturation" type="range" min="0" max="100" step="1">
+        <label id='sat-label' for="saturation">Saturation</label>
+        <input id="lightness" type="range" min="0" max="100" step="1">
+        <label id='light-label' for="lightness">Lightness</label>
+        <div class="values-container">
+            <div class="hsl"></div>
+            <div class="rgb"></div>
+            <div class="hex"></div>
+
+        </div>
+
+        <div class="buttons">
+            <button class="btn comp">Complimentary</button>
+            <button class="btn anal">Analogous</button>
+            <button class="btn tri">Triadic</button>
+            <button class="btn tet">Tetradic</button>
+            <button class="btn mono">Monochromatic</button>
+        </div>
+
+        <div class="starting-color"></div>
+        <div class="container"></div>
+
+    </main>
+
+
+    <script src="colors.js"></script>
+</body>
+
+</html>
