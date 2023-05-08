@@ -88,6 +88,11 @@ main {
     position: relative;
 }
 
+.box>span {
+    cursor: pointer;
+    margin: 0.4px;
+}
+
 input[type="range"] {
     -webkit-appearance: none;
     width: 100vw;

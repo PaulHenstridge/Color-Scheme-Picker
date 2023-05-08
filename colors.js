@@ -2,6 +2,9 @@
 const container = document.querySelector('.container')
 const colorPick = document.querySelector('#color-pick')
 
+const satInput = document.querySelector('#saturation')
+const lightInput = document.querySelector('#lightness')
+
 const compBtn = document.querySelector('.comp')
 const analBtn = document.querySelector('.anal')
 const triBtn = document.querySelector('.tri')
@@ -15,41 +18,58 @@ const hex = document.querySelector('.hex')
 const rgb = document.querySelector('.rgb')
 
 
+// saturation & lightness
+let saturation = satInput.value
+let lightness = lightInput.value
+
+satInput.addEventListener('change', () => {
+    saturation = satInput.value
+    console.log('sat: ', saturation)
+})
+
+lightInput.addEventListener('change', () => {
+    lightness = lightInput.value
+    console.log('light: ', lightness)
+})
+
+// TODO - Maker below a function and call whenever light or sat are changed
 // color picker
 let colorHue = Number(colorPick.value)
 colorPick.addEventListener('mouseup', () => {
     colorHue = Number(colorPick.value)
-    startingColor.style.backgroundColor = `hsl(${colorHue},100%,50%)`
+    startingColor.style.backgroundColor = `hsl(${colorHue},${saturation}%,${lightness}%)`
     console.log({ colorHue })
 })
 
 
+
+
 function getComplimentary(hue) {
-    return [`hsl(${hue < 180 ? hue + 180 : hue - 180},100%,50%)`]
+    return [`hsl(${hue < 180 ? hue + 180 : hue - 180},${saturation}%,${lightness}%)`]
 }
 
 function getAnalogous(hue) {
     return [
-        `hsl(${hue > 329 ? hue - 330 : hue + 30},100%,50%)`,
+        `hsl(${hue > 329 ? hue - 330 : hue + 30},${saturation}%,${lightness}%)`,
         // `hsl(${hue},100%,50%)`,
-        `hsl(${hue < 30 ? hue + 330 : hue - 30},100%,50%)`
+        `hsl(${hue < 30 ? hue + 330 : hue - 30},${saturation}%,${lightness}%)`
     ]
 }
 
 function getTriadic(hue) {
     return [
         // `hsl(${hue},100%,50%)`,
-        `hsl(${hue > 239 ? hue - 240 : hue + 120},100%,50%)`,
-        `hsl(${hue < 120 ? hue + 340 : hue - 120},100%,50%)`
+        `hsl(${hue > 239 ? hue - 240 : hue + 120},${saturation}%,${lightness}%)`,
+        `hsl(${hue < 120 ? hue + 340 : hue - 120},${saturation}%,${lightness}%)`
     ]
 }
 
 function getTetradic(hue) {
     return [
         // `hsl(${hue},100%,50%)`,
-        `hsl(${hue > 269 ? hue - 270 : hue + 90},100%,50%)`,
-        `hsl(${hue > 179 ? hue - 180 : hue + 180},100%,50%)`,
-        `hsl(${hue > 90 ? hue - 90 : hue + 270},100%,50%)`
+        `hsl(${hue > 269 ? hue - 270 : hue + 90},${saturation}%,${lightness}%)`,
+        `hsl(${hue > 179 ? hue - 180 : hue + 180},${saturation}%,${lightness}%)`,
+        `hsl(${hue > 90 ? hue - 90 : hue + 270},${saturation}%,${lightness}%)`
     ]
 }
 
@@ -72,10 +92,18 @@ function display(colors) {
         divvy.style.backgroundColor = color
         divvy.dataset.dataColor = color
         divvy.innerHTML = `
-        <button class="box-option save">Save</button>
         <span> ${color} </span>
-        <button class="box-option delete">delete</button>
         `
+        let data = divvy.querySelector('span')
+
+        data.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(data.innerText);
+                console.log(`Content ${data.innerText} copied to clipboard`);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        })
 
         divvy.addEventListener('mouseover', (e) => {
             // for each child node of the div in the event
@@ -119,23 +147,23 @@ monoBtn.addEventListener('click', () => {
     display(getMonochromatic(colorHue))
 })
 
-hsl.innerText = `hsl(${colorPick.value},50%,50%)`
-hex.innerText = hslToHex(colorPick.value, 50, 50)
-rgb.innerText = `rgb(${hslToRGB(colorPick.value, 50, 50)})`
+hsl.innerText = `hsl(${colorPick.value},${saturation}%,${lightness}%)`
+hex.innerText = hslToHex(colorPick.value, saturation, lightness)
+rgb.innerText = `rgb(${hslToRGB(colorPick.value, saturation, { lightness })})`
 
 setInterval(() => {
-    hsl.innerText = `hsl(${colorPick.value},50%,50%)`
+    hsl.innerText = `hsl(${colorPick.value},${saturation}%,${lightness}%)`
 }, 100)
 
 setInterval(() => {
-    hex.innerText = hslToHex(colorPick.value, 50, 50)
+    hex.innerText = hslToHex(colorPick.value, saturation, lightness)
 }, 100)
 
 setInterval(() => {
-    rgb.innerText = `rgb(${hslToRGB(colorPick.value, 50, 50)})`
+    rgb.innerText = `rgb(${hslToRGB(colorPick.value, saturation, lightness)})`
 }, 100)
 
-//  TODO - make readings pasteboard clickable
+// make readings pasteboard clickable
 const readingsArray = Array.from(valuesContainer.children)
 console.log({ readingsArray })
 for (let reading of readingsArray) {
